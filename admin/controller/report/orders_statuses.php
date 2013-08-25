@@ -20,14 +20,23 @@ class ControllerReportOrdersStatuses extends Controller {
 		if (isset($this->request->get['filter_date_aggregation'])) {
 			$filter_date_aggregation = $this->request->get['filter_date_aggregation'];
 		} else {
-			# default is week
-			$filter_date_aggregation = 2;
+			$filter_date_aggregation = 'week';
 		}
 
 		if (isset($this->request->get['filter_date_aggregation'])) {
 			$url .= '&filter_date_aggregation=' . $this->request->get['filter_date_aggregation'];
 		}
-			
+
+		if (isset($this->request->get['filter_count_type'])) {
+			$filter_count_type = $this->request->get['filter_count_type'];
+		} else {
+			$filter_count_type = 'orders';
+		}
+
+		if (isset($this->request->get['filter_count_type'])) {
+			$url .= '&filter_count_type=' . $this->request->get['filter_count_type'];
+		}
+		
 		if (isset($this->request->get['filter_no_of_records'])) {
 			$filter_no_of_records = (int) $this->request->get['filter_no_of_records'];
 			if($filter_no_of_records == 0)
@@ -55,16 +64,26 @@ class ControllerReportOrdersStatuses extends Controller {
       		'separator' => ' :: '
    		);		
 		
-		$this->load->model('report/product');
+		$this->load->model('report/sale');
 	
 		$this->data['orders'] = array();
 		
 		# contains history records sorted by ID (oldest first)
 		# These records contain status of the order and date
 		# To know if the status has changed we need to know for each order its previous state to compare it with records
-		$results = $this->model_report_product->getOrdersStatuses();
-		
-		
+		$results = $this->model_report_sale->getOrdersStatuses();
+
+		# Prepare quantity and totals for orders
+		$orders = array();
+		if($filter_count_type != 'orders')
+		{
+			$ordersResults = $this->model_report_sale->getOrdersListAndTotal();
+			foreach ($ordersResults as $result) {
+				$orders[$result['order_id']]['quantity'] = $result['quantity'];
+				$orders[$result['order_id']]['total'] = $result['total'];
+			}
+		}
+	
 		# key=order_id, data=latest known status of the order
 		$orderStatus=array();
 		# key=order_status_id, data is another array with key=date and data set to number of statuses 'added' and 'removed'
@@ -94,10 +113,14 @@ class ControllerReportOrdersStatuses extends Controller {
 				continue;
 			}
 
-			if($filter_date_aggregation == 2)      $newDate   = $result['week_added'];
-			else if($filter_date_aggregation == 3) $newDate   = $result['month_added'];
-			else                                   $newDate   = $result['day_added'];
+			if($filter_date_aggregation == 'week')        $newDate   = $result['week_added'];
+			else if($filter_date_aggregation == 'month')  $newDate   = $result['month_added'];
+			else                                          $newDate   = $result['day_added'];
 
+			# reportCounter represents amounts to be counted in the report
+			if($filter_count_type == 'orders')        $reportCounter   = 1;
+			else if($filter_count_type == 'quantity') $reportCounter   = $orders[$orderId]['quantity'];
+			else                                      $reportCounter   = $orders[$orderId]['total'];
 			
 			# prepare the full list of dates for the report
 			if(!array_key_exists($newDate, $datesCounters))
@@ -117,7 +140,7 @@ class ControllerReportOrdersStatuses extends Controller {
 			{
 				# this is a new order, so no need to exclude it from some old status
 				$orderStatus[$orderId] = $newStatus;
-				$statusesByDates[$newStatus][$newDate]['added']++;
+				$statusesByDates[$newStatus][$newDate]['added'] +=$reportCounter;
 			}
 			else
 			{
@@ -132,8 +155,8 @@ class ControllerReportOrdersStatuses extends Controller {
 						$statusesByDates[$oldStatus][$newDate]['added'] = 0;
 						$statusesByDates[$oldStatus][$newDate]['removed'] = 0;
 					}
-					$statusesByDates[$oldStatus][$newDate]['removed']++;
-					$statusesByDates[$newStatus][$newDate]['added']++;
+					$statusesByDates[$oldStatus][$newDate]['removed'] += $reportCounter;
+					$statusesByDates[$newStatus][$newDate]['added'] +=$reportCounter;
 					$orderStatus[$orderId] = $newStatus;
 				}
 			}
@@ -197,7 +220,7 @@ class ControllerReportOrdersStatuses extends Controller {
 			}
 		}	
 		
-		# Now all numeric data is ready. Count the total, the diff for it and turn the diff for statuses into nice text
+		# Now all numeric data is ready. Count the total, the diff for it and turn the diff for each status into nice text
 		$totalPrev=0;		
 		foreach ($datesCounters as $date => $statuses)
 		{
@@ -226,6 +249,7 @@ class ControllerReportOrdersStatuses extends Controller {
 		$this->data['data'] = array_slice($this->data['data'], -$filter_no_of_records, $filter_no_of_records, true);
 
 		# keep the filter value
+		$this->data['filter_count_type'] = $filter_count_type;
 		$this->data['filter_date_aggregation'] = $filter_date_aggregation;
 		$this->data['filter_no_of_records']    = $filter_no_of_records;
 		
@@ -240,6 +264,9 @@ class ControllerReportOrdersStatuses extends Controller {
 		$this->data['button_apply'] = $this->language->get('button_apply');
 		$this->data['button_print'] = $this->language->get('button_print');
 
+		$this->data['select_orders'] = $this->language->get('select_orders');
+		$this->data['select_quantity'] = $this->language->get('select_quantity');
+		$this->data['select_total'] = $this->language->get('select_total');
 		$this->data['select_day'] = $this->language->get('select_day');
 		$this->data['select_week'] = $this->language->get('select_week');
 		$this->data['select_month'] = $this->language->get('select_month');

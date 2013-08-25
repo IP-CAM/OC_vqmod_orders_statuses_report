@@ -1,5 +1,5 @@
 Orders statuses report
-Version: 1.00
+Version: 1.1.0
 
 This report allows to track progress of your store.
 It parses the history of your orders and shows the statistics about state changes of your orders.
@@ -10,6 +10,13 @@ You'll get the answers on these and many other questions:
  - In which states the orders are hanging?
  - Are we getting better in handling of our orders?
  - What have been done today / this week / this month?
+ 
+The report provides statistics in:
+ - number of orders
+ - number of ordered products
+ - total sales in default currency
+
+The report provides 3 forms of aggregation: daily, weekly and monthly.
 
 The report takes care about all the states ever used in your store: basic or custom.
 
@@ -19,8 +26,6 @@ Cells contain data in the format A[+B/-C]:
   C - a change to the previous period; the number of orders left this state
 
 You can limit the report by the number of records. In this case, the oldest records are skipped.
-
-The report provides 3 forms of aggregation: daily, weekly and monthly.
 
 The extension requires VQMOD. No files are overwritten.
 
@@ -76,6 +81,8 @@ Please get in touch with me in comment
 
 ChangeLog
 =======
+1.1.0
+-added statistics types: orders, products, sales
 1.0.0
 -init release
 
