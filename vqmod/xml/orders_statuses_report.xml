@@ -17,15 +17,23 @@
     </operation>
   </file>
   
-	<file name="admin/model/report/product.php">
+	<file name="admin/model/report/sale.php">
 		<operation>
-			<search position="before"><![CDATA[public function getTotalPurchased($data) {]]></search>
-			<add><![CDATA[	public function getOrdersStatuses($data = array()) {
-			$sql = "SELECT oh.order_history_id, oh.order_status_id, oh.order_id, DATE_FORMAT(oh.date_added,'%Y-%m-%d') as day_added, DATE_FORMAT(oh.date_added,'%Y-W%u') as week_added, DATE_FORMAT(oh.date_added,'%Y-%m') as month_added FROM " . DB_PREFIX . "order_history oh ORDER BY oh.order_history_id ASC";	
+			<search position="before"><![CDATA[public function getTotalShipping($data = array()) {]]></search>
+			<add><![CDATA[	
+				public function getOrdersStatuses($data = array()) {
+					$sql = "SELECT oh.order_history_id, oh.order_status_id, oh.order_id, DATE_FORMAT(oh.date_added,'%Y-%m-%d') as day_added, DATE_FORMAT(oh.date_added,'%Y-W%u') as week_added, DATE_FORMAT(oh.date_added,'%Y-%m') as month_added FROM " . DB_PREFIX . "order_history oh ORDER BY oh.order_history_id ASC";	
 
-			$query = $this->db->query($sql);
-			return $query->rows;
-		}]]></add>
+					$query = $this->db->query($sql);
+					return $query->rows;
+				}
+				public function getOrdersListAndTotal($data = array()) {
+					$sql = "SELECT op.order_id, SUM(op.quantity) as quantity, SUM(.op.total) as total FROM " . DB_PREFIX . "order_product op GROUP BY order_id;";	
+
+					$query = $this->db->query($sql);
+					return $query->rows;
+				}]]>
+			</add>
 		</operation>
 	</file>
 

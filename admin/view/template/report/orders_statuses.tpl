@@ -13,25 +13,46 @@
       <h1><img src="view/image/report.png" alt="" /> <?php echo $heading_title; ?></h1>
       <div class="buttons">
 	  
-	  <select name="filter_date_aggregation">
+	  <select name="filter_count_type">
 
-                <?php if ($filter_date_aggregation == 1) { ?>
-					<option value="1" selected="selected"><?php echo $select_day; ?></option>
+                <?php if ($filter_count_type == 'orders') { ?>
+					<option value="orders" selected="selected"><?php echo $select_orders; ?></option>
 				<?php } else { ?>
-					<option value="1" ><?php echo $select_day; ?></option>
+					<option value="orders" ><?php echo $select_orders; ?></option>
 				<?php } ?>
-				<?php if ($filter_date_aggregation == 2) { ?>
-					<option value="2" selected="selected"><?php echo $select_week; ?></option>
+				<?php if ($filter_count_type == 'quantity') { ?>
+					<option value="quantity" selected="selected"><?php echo $select_quantity; ?></option>
 				<?php } else { ?>
-					<option value="2" ><?php echo $select_week; ?></option>
+					<option value="quantity" ><?php echo $select_quantity; ?></option>
 				<?php } ?>
-				<?php if ($filter_date_aggregation == 3) { ?>
-					<option value="3" selected="selected"><?php echo $select_month; ?></option>
+				<?php if ($filter_count_type == 'total') { ?>
+					<option value="total" selected="selected"><?php echo $select_total; ?></option>
 				<?php } else { ?>
-					<option value="3" ><?php echo $select_month; ?></option>
+					<option value="total" ><?php echo $select_total; ?></option>
 				<?php } ?>
 
       </select>
+
+	  <select name="filter_date_aggregation">
+
+                <?php if ($filter_date_aggregation == 'day') { ?>
+					<option value="day" selected="selected"><?php echo $select_day; ?></option>
+				<?php } else { ?>
+					<option value="day" ><?php echo $select_day; ?></option>
+				<?php } ?>
+				<?php if ($filter_date_aggregation == 'week') { ?>
+					<option value="week" selected="selected"><?php echo $select_week; ?></option>
+				<?php } else { ?>
+					<option value="week" ><?php echo $select_week; ?></option>
+				<?php } ?>
+				<?php if ($filter_date_aggregation == 'month') { ?>
+					<option value="month" selected="selected"><?php echo $select_month; ?></option>
+				<?php } else { ?>
+					<option value="month" ><?php echo $select_month; ?></option>
+				<?php } ?>
+
+      </select>
+
 	  &nbsp<?php echo $select_no_of_records; ?>&nbsp<input type="text" name="filter_no_of_records" value="<?php echo $filter_no_of_records; ?>" />
 	  
 	  <a onclick="filter();" class="button"><?php echo $button_apply; ?></a>
@@ -100,6 +121,12 @@ function filter() {
 
 	if (filter_date_aggregation != '*') {
 		url += '&filter_date_aggregation=' + encodeURIComponent(filter_date_aggregation);
+	}	
+
+	var filter_count_type = $('select[name=\'filter_count_type\']').attr('value');
+
+	if (filter_count_type != '*') {
+		url += '&filter_count_type=' + encodeURIComponent(filter_count_type);
 	}	
 
 	var filter_no_of_records = $('input[name=\'filter_no_of_records\']').attr('value');
