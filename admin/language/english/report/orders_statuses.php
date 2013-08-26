@@ -17,7 +17,7 @@ $_['button_print']   = 'Print';
 // Select
 $_['select_orders'] = 'Number of orders';
 $_['select_quantity'] = 'Number of products';
-$_['select_total'] = 'Totals in default currency';
+$_['select_total'] = 'Sales';
 $_['select_day']   = 'Day';
 $_['select_week']  = 'Week';
 $_['select_month'] = 'Month';

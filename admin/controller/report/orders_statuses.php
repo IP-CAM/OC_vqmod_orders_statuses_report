@@ -266,7 +266,7 @@ class ControllerReportOrdersStatuses extends Controller {
 
 		$this->data['select_orders'] = $this->language->get('select_orders');
 		$this->data['select_quantity'] = $this->language->get('select_quantity');
-		$this->data['select_total'] = $this->language->get('select_total');
+		$this->data['select_total'] = $this->language->get('select_total') . ", " . $this->config->get('config_currency');
 		$this->data['select_day'] = $this->language->get('select_day');
 		$this->data['select_week'] = $this->language->get('select_week');
 		$this->data['select_month'] = $this->language->get('select_month');

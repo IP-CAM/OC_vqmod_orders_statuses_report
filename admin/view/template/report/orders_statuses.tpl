@@ -53,7 +53,7 @@
 
       </select>
 
-	  &nbsp<?php echo $select_no_of_records; ?>&nbsp<input type="text" name="filter_no_of_records" value="<?php echo $filter_no_of_records; ?>" />
+	  &nbsp<?php echo $select_no_of_records; ?>&nbsp<input size="5" type="text" name="filter_no_of_records" value="<?php echo $filter_no_of_records; ?>" />
 	  
 	  <a onclick="filter();" class="button"><?php echo $button_apply; ?></a>
 	  <a onclick="window.print()" class="button"><?php echo $button_print; ?></a>

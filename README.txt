@@ -1,5 +1,5 @@
 Orders statuses report
-Version: 1.1.0
+Version: 1.1.1
 
 This report allows to track progress of your store.
 It parses the history of your orders and shows the statistics about state changes of your orders.
@@ -81,6 +81,8 @@ Please get in touch with me in comment
 
 ChangeLog
 =======
+1.1.1
+-fixed form width for iPad
 1.1.0
 -added statistics types: orders, products, sales
 1.0.0

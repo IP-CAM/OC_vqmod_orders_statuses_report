@@ -17,7 +17,7 @@ $_['button_print']   = 'Печать';
 // Select
 $_['select_orders'] = 'Количество заказов';
 $_['select_quantity'] = 'Количество продуктов';
-$_['select_total'] = 'Сумма продаж в валюте по умолчанию';
+$_['select_total'] = 'Продажи';
 $_['select_day']   = 'День';
 $_['select_week']  = 'Неделя';
 $_['select_month'] = 'Месяц';
