@@ -81,6 +81,8 @@ Please get in touch with me in comment
 
 ChangeLog
 =======
+1.1.2
+-fixed the report for the number of products and sales in case when an order has no products
 1.1.1
 -fixed form width for iPad
 1.1.0

@@ -118,9 +118,10 @@ class ControllerReportOrdersStatuses extends Controller {
 			else                                          $newDate   = $result['day_added'];
 
 			# reportCounter represents amounts to be counted in the report
-			if($filter_count_type == 'orders')        $reportCounter   = 1;
-			else if($filter_count_type == 'quantity') $reportCounter   = $orders[$orderId]['quantity'];
-			else                                      $reportCounter   = $orders[$orderId]['total'];
+			if($filter_count_type == 'orders')                                               $reportCounter   = 1;
+			else if($filter_count_type == 'quantity' && array_key_exists($orderId, $orders)) $reportCounter   = $orders[$orderId]['quantity'];
+			else if($filter_count_type == 'total'    && array_key_exists($orderId, $orders)) $reportCounter   = $orders[$orderId]['total'];
+			else                                                                             $reportCounter   = 0;
 			
 			# prepare the full list of dates for the report
 			if(!array_key_exists($newDate, $datesCounters))
