@@ -5,6 +5,18 @@
     <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
     <?php } ?>
   </div>
+<style>  
+a.hovertest:link
+{
+text-decoration:none;
+}
+a.hovertest:hover
+{
+text-decoration:underline;
+}
+
+</style>
+
   <?php if ($success) { ?>
   <div class="success"><?php echo $success; ?></div>
   <?php } ?>
@@ -76,11 +88,12 @@
         </thead>
         <tbody>
           <?php if ($data) { ?>
+		  <?php $detailedReportUrl="index.php?route=report/orders_statuses_detailed&token=" . $token . "&filter_date_aggregation=" .  $filter_date_aggregation . "&filter_no_of_records=" .  $filter_no_of_records; ?>
           <?php foreach ($data as $date => $statuses) { ?>
           <tr>
 		  <td class="left" width=100><?php echo $date; ?></td>
           <?php foreach ($statuses as $status => $noOfStatuses) { ?>
-            <td class="left"><?php echo $noOfStatuses; ?></td>
+            <td class="left"><a href="<?php echo $detailedReportUrl . "&filter_date=" . $date . "&filter_status=" . $status; ?>"  class="hovertest"><?php echo $noOfStatuses; ?></a></td>
           <?php } ?>
 		  <td class="left"><?php echo $total[$date]; ?></td>
           </tr>

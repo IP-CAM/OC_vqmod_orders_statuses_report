@@ -22,13 +22,15 @@
 			<search position="before"><![CDATA[public function getTotalShipping($data = array()) {]]></search>
 			<add><![CDATA[	
 				public function getOrdersStatuses($data = array()) {
-					$sql = "SELECT oh.order_history_id, oh.order_status_id, oh.order_id, DATE_FORMAT(oh.date_added,'%Y-%m-%d') as day_added, DATE_FORMAT(oh.date_added,'%Y-W%u') as week_added, DATE_FORMAT(oh.date_added,'%Y-%m') as month_added FROM " . DB_PREFIX . "order_history oh ORDER BY oh.order_history_id ASC";	
+					$sql = "SELECT oh.order_history_id, oh.order_status_id, oh.order_id, oh.comment, DATE_FORMAT(oh.date_added,'%Y-%m-%d') as day_added, DATE_FORMAT(oh.date_added,'%Y-W%u') as week_added, DATE_FORMAT(oh.date_added,'%Y-%m') as month_added FROM `" . DB_PREFIX . "order_history` oh ORDER BY oh.order_history_id ASC";	
 
 					$query = $this->db->query($sql);
 					return $query->rows;
 				}
 				public function getOrdersListAndTotal($data = array()) {
-					$sql = "SELECT op.order_id, SUM(op.quantity) as quantity, SUM(.op.total) as total FROM " . DB_PREFIX . "order_product op GROUP BY order_id;";	
+					
+					
+$sql = "SELECT o.order_id, o.firstname, o.lastname, o.shipping_country, SUM(op.quantity) as quantity, SUM(op.total) as total FROM `" . DB_PREFIX . "order_product` op, `" . DB_PREFIX . "order` o WHERE (o.order_id = op.order_id) GROUP BY order_id;";	
 
 					$query = $this->db->query($sql);
 					return $query->rows;

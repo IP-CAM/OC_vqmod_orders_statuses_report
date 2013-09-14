@@ -40,10 +40,9 @@ class ControllerReportOrdersStatuses extends Controller {
 		if (isset($this->request->get['filter_no_of_records'])) {
 			$filter_no_of_records = (int) $this->request->get['filter_no_of_records'];
 			if($filter_no_of_records == 0)
-				$filter_no_of_records = $this->config->get('config_admin_limit');
+				$filter_no_of_records = 8;
 		} else {
-			# default is taken from the configuration
-			$filter_no_of_records = $this->config->get('config_admin_limit');			
+			$filter_no_of_records = 8;			
 		}
 
 		if (isset($this->request->get['filter_no_of_records'])) {

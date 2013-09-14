@@ -14,8 +14,10 @@ The report provides statistics in:
  - number of orders
  - number of ordered products
  - total sales in default currency
-
+ 
 The report provides 3 forms of aggregation: daily, weekly and monthly.
+
+For each date range and each state you can get the detailed information about which orders exactly have changed their state.
 
 The report takes care about all the states ever used in your store: basic or custom.
 
@@ -42,7 +44,9 @@ Copy the admin and vqmod directories to your store. That's all!
 Setup
 =====================================================
 * Log into the admin section of your openCart Site e.g www.yoursite.com/admin.
-* Add access rights: Select System - > Users -> Users groups. Choose Top Administrators -> Edit. Add access and modify permissions for report/orders_statuses.
+* Add access rights: Select System - > Users -> Users groups. 
+Choose Top Administrators -> Edit. 
+Add access and modify permissions for report/orders_statuses and report/orders_statuses_detailed.
 
 Usage
 =========
@@ -50,7 +54,7 @@ Go to admin part.
 Go to Reports -> Sales -> Orders Statuses
 If you get an error about access rights, make sure you followed the setup section :-)
 
-To add a language
+To add a new language
 =====================================================
 1. Copy contents of 
 admin\language\english
@@ -58,6 +62,7 @@ to
 admin\language\[other language]
 Then modify 
 admin\language\[other language]\report\orders_statuses.php
+admin\language\[other language]\report\orders_statuses_detailed.php
 
 2. To set the report name in the header menu:
 Make a copy this section in vqmod\xml\orders_statuses_report.xml 
@@ -72,16 +77,16 @@ Change 'english' in the file name you the other language.
 Change 'Orders Statuses' to your text.
 Change 'Coupons' to the proper name in your langiuage. You can check admin/language/[other language]/common/header.php to make sure that you change it correctly.
 
-
-
 Need Help?
 =========
 Please get in touch with me in comment
 
 ChangeLog
 =======
-Current version: 1.1.2
+Current version: 1.2.1
 
+1.2.1
+-added detailed report for each date range and state
 1.1.2
 -fixed the report for the number of products and sales in case when an order has no products
 1.1.1
