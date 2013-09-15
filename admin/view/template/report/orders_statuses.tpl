@@ -70,9 +70,11 @@ text-decoration:underline;
 	  <a onclick="filter();" class="button"><?php echo $button_apply; ?></a>
 	  <a onclick="window.print()" class="button"><?php echo $button_print; ?></a>
 	  </div>
-	  
-	  
+	    
     </div>
+	
+	<div id="placeholder" style="width:1200px;height:400px"></div>
+
     <div class="content">
       <table class="list">
         <thead>
@@ -168,6 +170,100 @@ $('#form input').keydown(function(e) {
 
 //--></script> 
 
+<!--[if IE]>
+
+<script type="text/javascript" src="view/javascript/jquery/flot/excanvas.js"></script>
+
+<![endif]--> 
+
+<script type="text/javascript" src="view/javascript/jquery/flot/jquery.flot.js"></script> 
+
+<script type="text/javascript"><!--
+var graph = [];
+var axis = [];
+var tooltip = [];
+
+$(function () {
+	var xaxisIx = 0;
+	var graphIx = 0;
+    <?php foreach ($graph_input_xaxis as $value) { ?>
+		axis.push([xaxisIx++, "<?php echo $value ?>"]);
+	<?php } ?>
+	
+    <?php foreach ($graph_input as $status => $data) { ?>
+	    graphIx = 0;
+		graph[<?php echo $status ?>] = [];
+		<?php foreach ($data as $abs) { ?>
+		graph[<?php echo $status ?>].push([graphIx++, <?php echo $abs ?>]);
+		<?php } ?>
+	<?php } ?>
+
+    $.plot($("#placeholder"), [
+    <?php foreach ($graph_input as $status => $data) { ?>
+        { label: "<?php echo $columns[$status] ?>",  data: graph[<?php echo $status ?>]},
+	<?php } ?>
+    ], {
+        series: {
+            lines: { show: true },
+            points: { show: true }
+        },
+        xaxis: {
+            show: true,
+			ticks: axis
+        },
+        yaxis: {
+            show: true
+        },
+        grid: {
+			hoverable: true,
+			backgroundColor: { colors: ["#fff", "#eee"] }
+        },
+		legend: {
+            position: "nw"
+		}
+    });
+});
+
+   function showTooltip(x, y, contents) {
+        $('<div id="tooltip">' + contents + '</div>').css( {
+            position: 'absolute',
+            display: 'none',
+            top: y + 5,
+            left: x + 5,
+            border: '1px solid #fdd',
+            padding: '2px',
+            'background-color': '#fee',
+            opacity: 0.80
+        }).appendTo("body").fadeIn(200);
+    }
+
+    var previousPoint = null;
+    $("#placeholder").bind("plothover", function (event, pos, item) {
+        $("#x").text(pos.x.toFixed(0));
+        $("#y").text(pos.y.toFixed(0));
+
+
+            if (item) {
+                if (previousPoint != item.dataIndex) {
+                    previousPoint = item.dataIndex;
+                    
+                    $("#tooltip").remove();
+                    var x = item.datapoint[0].toFixed(0),
+                        y = item.datapoint[1].toFixed(0);
+                    
+                    showTooltip(item.pageX, item.pageY,
+                                item.series.label + " :: " + axis[item.dataIndex][1] + " :: " + y);
+                }
+            }
+            else {
+                $("#tooltip").remove();
+                previousPoint = null;            
+            }
+
+    });
+
+
+//--></script> 
 
 
 <?php echo $footer; ?>

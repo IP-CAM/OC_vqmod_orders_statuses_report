@@ -168,7 +168,7 @@ class ControllerReportOrdersStatuses extends Controller {
 			foreach($statusesByDates as $status => $dates)
 			{
 				$datesCounters[$date][$status]['abs']=0;
-				$datesCounters[$date][$status]['diff']="";
+				$datesCounters[$date][$status]['diff_text']="";
 			}
 		}
 
@@ -179,15 +179,15 @@ class ControllerReportOrdersStatuses extends Controller {
 			{
 				if($noOfStatuses['added'] != 0 || $noOfStatuses['removed'] != 0) 
 				{
-					$datesCounters[$date][$status]['diff'] = "&nbsp&nbsp[";
-					$datesCounters[$date][$status]['diff'] .= ($noOfStatuses['added'] != 0) ? "+".$noOfStatuses['added'] : "";
-					$datesCounters[$date][$status]['diff'] .= ($noOfStatuses['added'] != 0 && $noOfStatuses['removed'] != 0) ? "/" : "";
-					$datesCounters[$date][$status]['diff'] .= ($noOfStatuses['removed'] != 0) ? "-".$noOfStatuses['removed'] : "";
-					$datesCounters[$date][$status]['diff'] .= "]";
+					$datesCounters[$date][$status]['diff_text'] = "&nbsp&nbsp[";
+					$datesCounters[$date][$status]['diff_text'] .= ($noOfStatuses['added'] != 0) ? "+".$noOfStatuses['added'] : "";
+					$datesCounters[$date][$status]['diff_text'] .= ($noOfStatuses['added'] != 0 && $noOfStatuses['removed'] != 0) ? "/" : "";
+					$datesCounters[$date][$status]['diff_text'] .= ($noOfStatuses['removed'] != 0) ? "-".$noOfStatuses['removed'] : "";
+					$datesCounters[$date][$status]['diff_text'] .= "]";
 				}
 				else
 				{
-					$datesCounters[$date][$status]['diff'] = "";
+					$datesCounters[$date][$status]['diff_text'] = "";
 				}
 				
 				# calculate the cumulative number of orders in specific status by the date
@@ -219,17 +219,22 @@ class ControllerReportOrdersStatuses extends Controller {
 					$this->data['columns'][$status] = $statusData['name'];
 			}
 		}	
+
 		
 		# Now all numeric data is ready. Count the total, the diff for it and turn the diff for each status into nice text
-		$totalPrev=0;		
+		$totalPrev=0;
+		$this->data['graph_input_xaxis'] = array();
+		$this->data['graph_input'] = array();
 		foreach ($datesCounters as $date => $statuses)
 		{
 			$readableDate = $date . "-" . date('M', strtotime($date));
+			$this->data['graph_input_xaxis'][] = $readableDate;
 			$this->data['total'][$readableDate] = 0;
 			foreach ($statuses as $status => $noOfStatuses) {
 							
 				# prepare the text for each date/status: abs [+x/-y]
-				$this->data['data'][$readableDate][$status] = $noOfStatuses['abs'] . "&nbsp" . $noOfStatuses['diff'];
+				$this->data['graph_input'][$status][] = $noOfStatuses['abs'];
+				$this->data['data'][$readableDate][$status] = $noOfStatuses['abs'] . "&nbsp" . $noOfStatuses['diff_text'];
 				$this->data['total'][$readableDate] += $noOfStatuses['abs'];
 			}
 			
@@ -245,8 +250,24 @@ class ControllerReportOrdersStatuses extends Controller {
 			$totalPrev=$totalNew;
 		}
 		
+
+		$this->data['json'] = array();
+		foreach($this->data['graph_input'] as $status => $data)
+		{
+			#print("status=".$status. ";  data=");
+			#print_r($data);
+			#print("<br>---<br>");
+			#$this->data['json'][] = 1;
+		}
+		
 		# limit the number of records to show
-		$this->data['data'] = array_slice($this->data['data'], -$filter_no_of_records, $filter_no_of_records, true);
+		$this->data['data']              = array_slice($this->data['data'],              -$filter_no_of_records, $filter_no_of_records, true);
+		$this->data['graph_input_xaxis'] = array_slice($this->data['graph_input_xaxis'], -$filter_no_of_records, $filter_no_of_records, true);
+		
+		foreach($this->data['graph_input'] as $status => $data)
+		{
+			$this->data['graph_input'][$status] = array_slice($this->data['graph_input'][$status], -$filter_no_of_records, $filter_no_of_records, true);
+		}
 
 		# keep the filter value
 		$this->data['filter_count_type'] = $filter_count_type;
