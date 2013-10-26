@@ -74,6 +74,8 @@ text-decoration:underline;
     </div>
 	
 	<div id="placeholder" style="width:1200px;height:400px"></div>
+	
+	<?php /* echo $json; */ ?>
 
     <div class="content">
       <table class="list">

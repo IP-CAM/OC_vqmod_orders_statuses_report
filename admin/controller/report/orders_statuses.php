@@ -250,16 +250,6 @@ class ControllerReportOrdersStatuses extends Controller {
 			$totalPrev=$totalNew;
 		}
 		
-
-		$this->data['json'] = array();
-		foreach($this->data['graph_input'] as $status => $data)
-		{
-			#print("status=".$status. ";  data=");
-			#print_r($data);
-			#print("<br>---<br>");
-			#$this->data['json'][] = 1;
-		}
-		
 		# limit the number of records to show
 		$this->data['data']              = array_slice($this->data['data'],              -$filter_no_of_records, $filter_no_of_records, true);
 		$this->data['graph_input_xaxis'] = array_slice($this->data['graph_input_xaxis'], -$filter_no_of_records, $filter_no_of_records, true);
@@ -268,6 +258,13 @@ class ControllerReportOrdersStatuses extends Controller {
 		{
 			$this->data['graph_input'][$status] = array_slice($this->data['graph_input'][$status], -$filter_no_of_records, $filter_no_of_records, true);
 		}
+
+		$graph_input = array();
+		foreach($this->data['graph_input'] as $status => $data)
+		{
+			$graph_input[] = array("label" => $this->data['columns'][$status], "data" => $data);
+		}
+		$this->data['json'] = json_encode($graph_input);
 
 		# keep the filter value
 		$this->data['filter_count_type'] = $filter_count_type;
